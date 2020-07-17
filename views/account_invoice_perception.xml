@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<odoo>
+
+    <data>
+
+        <record id="view_account_invoice_perception_tree" model="ir.ui.view">
+            <field name="name">account.invoice.perception.tree</field>
+            <field name="model">account.invoice.perception</field>
+            <field name="arch" type="xml">
+                <tree string="Percepciones" create="false" delete="false">
+                    <field name="date_account" string="Fecha contable"/>
+                    <field name="date_invoice" string="Fecha de factura"/>
+                    <field name="perception_id"/>
+                    <field name="jurisdiction"/>
+                    <field name="move_id"/>
+                    <field name="partner_id"/>
+                    <field name="currency_id" string="Moneda" groups="base.group_multi_currency"/>
+                    <field name="base"/>
+                    <field name="amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_perception_search" model="ir.ui.view">
+            <field name="name">account.invoice.perception.search</field>
+            <field name="model">account.invoice.perception</field>
+            <field name="arch" type="xml">
+                <search string="Percepciones">
+                    <group>
+                        <field name="date_account"/>
+                        <field name="date_invoice"/>
+                        <field name="move_id"/>
+                        <field name="partner_id"/>
+                        <field name="perception_id"/>
+                        <field name="jurisdiction"/>
+                    </group>
+                    <group string="Filtros">
+                        <filter name="applied" string="Efectuadas" domain="[('perception_id.type_tax_use', '=', 'sale')]"/>
+                        <filter name="supported" string="Soportadas" domain="[('perception_id.type_tax_use', '=', 'purchase')]"/>
+                    </group>
+                    <group expand="0" string="Agrupar por...">
+                        <filter string="Percepcion" name="perception_id" domain="[]" context="{'group_by':'perception_id'}"/>
+                        <filter string="Jurisdiccion" name="jurisdiction" domain="[]" context="{'group_by':'jurisdiction'}"/>
+                        <filter string="Fecha de factura" name="date_invoice" domain="[]"  context="{'group_by':'date_invoice'}"/>
+                        <filter string="Fecha contable" name="accounting_date" domain="[]"  context="{'group_by':'date_account'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_perception_tax_applied_tree" model="ir.actions.act_window">
+            <field name="name">Impuestos de percepciones efectuadas</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.invoice.perception</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_account_invoice_perception_tree"/>
+            <field name="context">{"search_default_applied":1}</field>
+            <field name="domain">[('move_id.state','=','posted')]</field>
+            <field name="search_view_id" ref="view_account_invoice_perception_search" />
+        </record>
+
+        <record id="action_perception_tax_supported_tree" model="ir.actions.act_window">
+            <field name="name">Impuestos de percepciones soportadas</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.invoice.perception</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_account_invoice_perception_tree"/>
+            <field name="context">{"search_default_supported":1}</field>
+            <field name="domain">[('move_id.state','=','posted')]</field>
+            <field name="search_view_id" ref="view_account_invoice_perception_search"/>
+        </record>
+
+        <menuitem id="account_invoice_perception_applied_menu"
+                  name="Percepciones efectuadas"
+                  parent="account.menu_finance_receivables"
+                  sequence="105"
+                  action="action_perception_tax_applied_tree"/>
+
+        <menuitem id="account_invoice_perception_supported_menu"
+                  name="Percepciones soportadas"
+                  parent="account.menu_finance_payables"
+                  sequence="105"
+                  action="action_perception_tax_supported_tree"/>
+
+
+    </data>
+
+</odoo>
+
+<!-- vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4-->

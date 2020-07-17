@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="perception_perception_form">
+            <field name="name">Perception perception form</field>
+            <field name="model">perception.perception</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="active" invisible="1"/>
+                        <widget name="web_ribbon" title="Archivado" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <div class="oe_title">
+                            <h1><field name="name" placeholder="Nombre"/></h1>
+                        </div>
+                        <group string="Configuracion">
+                            <group>
+                                <field name="tax_id"/>
+                                <field name="state_id"/>
+                                <field name="type_tax_use" string="Aplicacion impositiva" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="type"/>
+                                <field name="jurisdiction"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="perception_perception_tree">
+            <field name="name">Perception perception tree</field>
+            <field name="model">perception.perception</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="tax_id"/>
+                    <field name="state_id"/>
+                    <field name="type"/>
+                    <field name="jurisdiction"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_perception_perception_view" model="ir.actions.act_window">
+            <field name="name">Percepciones</field>
+            <field name="res_model">perception.perception</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            id="perception_perception_main_menu"
+            name="Percepciones"
+            action="action_perception_perception_view"
+            parent="l10n_ar_taxes.taxes_main_menu"
+        />
+
+    </data>
+</odoo>
+
+<!-- vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4-->
